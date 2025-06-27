@@ -11,11 +11,15 @@ class WeatherServices {
     );
 
     final response = await http.get(url);
+    print("Request URL: $url");
+    print("Status code: ${response.statusCode}");
+    print("Response body: ${response.body}");
 
-    if (response.statusCode == 200){
+    if (response.statusCode == 200) {
       return Weather.fromJson(json.decode(response.body));
-    }else{
-      throw Exception('Failed load weather data');
+    } else {
+      final error = json.decode(response.body);
+      throw Exception(error['message'] ?? 'Failed to load weather data');
     }
   }
 }

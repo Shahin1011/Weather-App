@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:weather/models/weather_model.dart';
 import 'package:weather/services/weather_services.dart';
+import 'package:weather/widgets/weather_card.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen ({super.key});
@@ -18,19 +19,29 @@ class _HomeScreenState extends State<HomeScreen> {
   Weather? _weather;
 
   void _getWeather() async {
+    if (_controller.text.trim().isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Please enter a city name")),
+      );
+      return;
+    }
+
     setState(() {
       _isLoading = true;
     });
 
     try{
-      final weather = await _weatherServices.fetchWeather(_controller.text);
+      final weather = await _weatherServices.fetchWeather(_controller.text.trim());
       setState(() {
         _weather = weather;
         _isLoading = false;
       });
-    }catch(e){
+    }catch (e) {
+      setState(() {
+        _isLoading = false;
+      });
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Error fetching data")),
+        SnackBar(content: Text("Error: ${e.toString()}")),
       );
     }
   }
@@ -94,7 +105,27 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 SizedBox(height: 20,),
+                
+                ElevatedButton(
+                  onPressed: _getWeather,
+                  child: Text(
+                    "Get Weather",
+                    style: TextStyle(fontSize: 18, color: Colors.white),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Color.fromARGB(209, 125, 155, 170),
+                    foregroundColor: Colors.blue,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                  ),
+                ),
 
+                if (_isLoading)
+                  Padding(padding: EdgeInsets.all(20), child: CircularProgressIndicator(color: Colors.white,),),
+
+                if (_weather != null)
+                  WeatherCard(weather: _weather!),
 
               ],
             ),

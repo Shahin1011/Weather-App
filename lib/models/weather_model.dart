@@ -22,7 +22,7 @@ class Weather {
         cityName: json['name'],
         temperature: json['main']['temp'] - 273.15,
         humidity: json['main']['humidity'],
-        description: json['weather']['description'],
+        description: json['weather'][0]['description'],
         windSpeed: json['wind']['speed'],
         sunrise: json['sys']['sunrise'],
         sunset: json['sys']['sunset'],
