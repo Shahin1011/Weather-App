@@ -1,3 +1,14 @@
+# Force GitHub to treat Dart as the main language
+*.dart linguist-language=Dart
+
+# Optional: exclude native and build files from language stats
 android/** linguist-vendored
 ios/** linguist-vendored
 build/** linguist-vendored
+web/** linguist-vendored
+.mel/** linguist-vendored
+test/** linguist-vendored
+
+# Don't count pubspec.lock or config files in language analysis
+*.lock linguist-generated
+*.yaml linguist-generated
